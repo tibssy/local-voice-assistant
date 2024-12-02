@@ -58,6 +58,7 @@ Prerequisites
     You can download the models from [Piper Samples](https://rhasspy.github.io/piper-samples/).
   
     After downloading, add the model path to the PIPER_MODEL_PATH constant in the code or place the model file in the project directory.
+    ![swappy-20241202_035951](https://github.com/user-attachments/assets/5e211cf0-1031-480c-8c9a-6d0612241056)
 
 
 - **Step 5:** Verify Installation
