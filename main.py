@@ -120,13 +120,29 @@ class VoiceAssistant:
             return ' '.join(segment.text for segment in segments)
 
     def synthesize_and_play(self, text_stream):
-        """Synthesize and play text using Piper."""
+        """Synthesize and play text, but stop if user interrupts."""
         sentences = generate_sentences(text_stream)
         with sd.OutputStream(samplerate=self.voice.config.sample_rate, channels=1, dtype='int16') as stream:
             for sentence in sentences:
                 for audio_bytes in self.voice.synthesize_stream_raw(sentence):
+                    # Check if user input is detected
+                    if self.is_user_interrupting():
+                        print("User interruption detected. Stopping playback.")
+                        return  # Stop speaking and return control
                     int_data = np.frombuffer(audio_bytes, dtype=np.int16)
                     stream.write(int_data)
+
+    def is_user_interrupting(self) -> bool:
+        """Check if the user is interrupting the assistant."""
+        with sd.InputStream(samplerate=FREQ, blocksize=BLOCK_SIZE, channels=1) as mic_stream:
+            data, _ = mic_stream.read(BLOCK_SIZE)
+            rms = np.sqrt(np.mean(data ** 2))
+            if rms > SILENCE_THRESHOLD:  # User starts speaking
+                print("Voice detected, interrupting.")
+                return True
+        return False
+
+
 
 
 if __name__ == "__main__":

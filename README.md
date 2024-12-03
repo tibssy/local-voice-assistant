@@ -49,7 +49,7 @@ Prerequisites
 
     Install the required Python packages listed in requirements.txt:
     ```commandline
-    pip install -r requirements.txt
+    pip install --no-deps -r requirements.txt
     ```
 
   - **Step 4:** Download and Configure the TTS Model
